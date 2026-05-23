@@ -1,0 +1,18 @@
+#! This patch fixes an issue with Icarus Verilog:
+#!
+#! ```
+#! error: 'sqrtOpOut' has already been declared in this scope.                          
+#! It was declared here as a net.
+#! ```
+
+diff --git a/extract/divSqrtRecFN_small.v b/extract/divSqrtRecFN_small.v
+--- a/extract/divSqrtRecFN_small.v
++++ b/extract/divSqrtRecFN_small.v
+@@ -302,7 +302,6 @@ module
+ 
+     /*------------------------------------------------------------------------
+     *------------------------------------------------------------------------*/
+-    wire sqrtOpOut;
+     wire [2:0] roundingModeOut;
+     wire invalidExc, infiniteExc, out_isNaN, out_isInf, out_isZero, out_sign;
+     wire signed [(expWidth + 1):0] out_sExp;

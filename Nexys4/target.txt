@@ -1,0 +1,12 @@
+该工程的目标是实现FPGA开发板通讯，具体要求如下：
+1.  在Nexys4/IMP 文件夹下创立vivado工程，开发板型号为Nexys4
+2.  在Nexys4/const文件夹下设立IO与时序约束的xdc文件
+3.  RTL内所有位宽大于2的寄存器组全部强制映射为BRAM
+4.  使用UART串口进行上位机与CPU的通讯，UART串口为NEXYS4开发板自带的USB-UART接口,相关代码存储在RTL/CPU下
+5.  要求FPGA能够通过UART接收上位机发送的bin文件，将数据存入l1_icache_model后供CPU读取，并使CPU将运算结果通过UART传回上位机
+6.  要求CPU能够连续实现多次UART通信操作，禁止通过重新烧录BITSTEAM来实现多次UART传输操作
+7.  在RTL/TB文件夹下创立验证文件，在烧录前通过基础功能测试，即模拟UART输入激励，并打印CPU输出
+8.  在Nexys4/test目录下建立bin文件，检查上板后能否正常运行
+9.  关于bin文件，要求如下:
+            bin文件为完全黑盒，除了内容符合RISC-V指令规范和上位机通过uart格式将其传输给FPGA外无任何可确认信息，UART和CPU的所有设计不可预设对bin文件的依赖，要求完全解耦
+            UART组件和CPU应具备自启动功能，内部判断bin事务的开始与结束
