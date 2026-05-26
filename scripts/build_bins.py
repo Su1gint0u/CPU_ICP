@@ -80,6 +80,22 @@ TEST_SPECS: dict[str, dict[str, Any]] = {
             {"label": "out_unsigned[4]", "offset": 84},
         ],
     },
+    "g3_extra_alu_branch": {
+        "kind": "int_regs",
+        "regs": ["x6", "x7", "x10", "x11", "x12", "x13", "x18", "x19", "x20"],
+    },
+    "g3_extra_fence_jump": {
+        "kind": "int_regs",
+        "regs": ["x5", "x7", "x8", "x13"],
+    },
+    "g4_extra_muldiv_edges": {
+        "kind": "int_regs",
+        "regs": ["x7", "x8", "x11", "x12", "x13", "x14", "x17", "x18", "x19"],
+    },
+    "g5_extra_fp_move": {
+        "kind": "int_regs",
+        "regs": ["x6", "x8", "x10", "x12"],
+    },
 }
 
 MEM_OPS = (
@@ -128,6 +144,8 @@ def grade_from_path(path: Path) -> str:
 def isa_for_test(test_name: str) -> tuple[str, str, str]:
     if test_name.startswith("g5_"):
         return "rv32imf_zicsr", "ilp32f", "RV32IMF_Zicsr"
+    if "fence" in test_name:
+        return "rv32im_zifencei", "ilp32", "RV32IM_Zifencei"
     return "rv32im", "ilp32", "RV32IM"
 
 
