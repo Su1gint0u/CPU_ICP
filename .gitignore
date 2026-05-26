@@ -27,6 +27,7 @@ core.*
 *.jou
 *.log
 *.str
+*.pb
 *.backup.jou
 *.backup.log
 webtalk*.jou
@@ -63,6 +64,9 @@ transcript
 *.vcd
 *.vpd
 *.saif
+
+# Third-party FPU source kept out of the no-IP acceptance build.
+RTL/berkeley-hardfloat/
 
 # Auto-generated test artifacts
 tests/.vivado_impl_state.json

@@ -280,8 +280,11 @@ def epilogue_for_spec(spec: dict[str, Any]) -> str:
         for reg in spec["regs"]:
             lines.extend(emit_word_asm(reg))
     elif kind == "fp_regs":
-        for reg in spec["regs"]:
-            lines.append(f"    fmv.x.w {TMP_REG}, {reg}")
+        scratch_base = 128
+        for idx, reg in enumerate(spec["regs"]):
+            scratch_off = scratch_base + (idx * 4)
+            lines.append(f"    fsw {reg}, {scratch_off}({DATA_REG})")
+            lines.append(f"    lw {TMP_REG}, {scratch_off}({DATA_REG})")
             lines.append("    jal x1, __approval_emit_word")
     elif kind == "memory_words":
         for word in spec["words"]:

@@ -8,6 +8,7 @@ SIM_ROOT="/tmp/cpu_icp_unit_sims"
 
 rm -rf "$SIM_ROOT"
 mkdir -p "$SIM_ROOT/cpu_alu" "$SIM_ROOT/uart_rx" "$SIM_ROOT/uart_bridge"
+mkdir -p "$SIM_ROOT/fpu_wrapper"
 
 echo "===[cpu_alu] compile/elab/run ==="
 cd "$SIM_ROOT/cpu_alu"
@@ -32,5 +33,13 @@ cd "$SIM_ROOT/uart_bridge"
     "$RTL_DIR/TB/tb_uart_bridge.sv"
 "$VIVADO"/xelab -debug typical -timescale 1ns/1ps -L xil_defaultlib tb_uart_bridge
 "$VIVADO"/xsim tb_uart_bridge --runall
+
+echo "===[fpu_wrapper] compile/elab/run ==="
+cd "$SIM_ROOT/fpu_wrapper"
+"$VIVADO"/xvlog -sv \
+    "$RTL_DIR/cpu/fpu_wrapper.sv" \
+    "$RTL_DIR/TB/tb_fpu_wrapper.sv"
+"$VIVADO"/xelab -debug typical -timescale 1ns/1ps -L xil_defaultlib tb_fpu_wrapper
+"$VIVADO"/xsim tb_fpu_wrapper --runall
 
 echo "=== Unit simulations DONE ==="

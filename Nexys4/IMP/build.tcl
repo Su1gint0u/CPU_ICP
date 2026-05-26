@@ -19,25 +19,8 @@ set_property top $top_module [current_fileset]
 
 # ---- Source files ----
 set rtl_dir [file normalize "$project_dir/../../RTL/cpu"]
-set hf_dir  [file normalize "$project_dir/../../RTL/berkeley-hardfloat/extract"]
-set hf_riscv_dir [file join $hf_dir RISCV]
-
-set hardfloat_files [list]
-lappend hardfloat_files $hf_dir/HardFloat_primitives.v
-lappend hardfloat_files $hf_dir/HardFloat_rawFN.v
-lappend hardfloat_files $hf_dir/isSigNaNRecFN.v
-lappend hardfloat_files $hf_dir/fNToRecFN.v
-lappend hardfloat_files $hf_dir/recFNToFN.v
-lappend hardfloat_files $hf_dir/recFNToIN.v
-lappend hardfloat_files $hf_dir/iNToRecFN.v
-lappend hardfloat_files $hf_dir/addRecFN.v
-lappend hardfloat_files $hf_dir/mulRecFN.v
-lappend hardfloat_files $hf_dir/mulAddRecFN.v
-lappend hardfloat_files $hf_dir/divSqrtRecFN_small.v
-lappend hardfloat_files $hf_riscv_dir/HardFloat_specialize.v
 
 set src_files [list]
-lappend src_files {*}$hardfloat_files
 lappend src_files $rtl_dir/cpu_pkg.sv
 lappend src_files $rtl_dir/cpu_alu.sv
 lappend src_files $rtl_dir/cpu_bru.sv
@@ -89,7 +72,7 @@ puts "\[BUILD\] Added $added source files"
 
 # Set SystemVerilog
 set_property FILE_TYPE SystemVerilog [get_files -of_objects [get_filesets sources_1] *.sv]
-set_property include_dirs [list $rtl_dir $rtl_dir/bp $hf_riscv_dir $hf_dir] [get_filesets sources_1]
+set_property include_dirs [list $rtl_dir $rtl_dir/bp] [get_filesets sources_1]
 set_property verilog_define {SYNTHESIS=1} [get_filesets sources_1]
 
 # ---- Always-on acceptance ILA ----

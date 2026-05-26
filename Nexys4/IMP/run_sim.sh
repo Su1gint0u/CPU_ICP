@@ -5,8 +5,6 @@ set -e
 VIVADO="/media/alice/workplace/tools/xilinx/2025.2/Vivado/bin"
 RTL_DIR="/media/alice/workplace/CPU_ICP/RTL"
 SIM_DIR="/tmp/cpu_icp_sim"
-HF_DIR="$RTL_DIR/berkeley-hardfloat/extract"
-HF_RISCV_DIR="$HF_DIR/RISCV"
 
 rm -rf "$SIM_DIR"
 mkdir -p "$SIM_DIR"
@@ -14,19 +12,6 @@ cd "$SIM_DIR"
 
 # ---- Collect all source files in dependency order ----
 SRC=(
-    # Berkeley HardFloat
-    "$HF_DIR/HardFloat_primitives.v"
-    "$HF_DIR/HardFloat_rawFN.v"
-    "$HF_DIR/isSigNaNRecFN.v"
-    "$HF_DIR/fNToRecFN.v"
-    "$HF_DIR/recFNToFN.v"
-    "$HF_DIR/recFNToIN.v"
-    "$HF_DIR/iNToRecFN.v"
-    "$HF_DIR/addRecFN.v"
-    "$HF_DIR/mulRecFN.v"
-    "$HF_DIR/mulAddRecFN.v"
-    "$HF_DIR/divSqrtRecFN_small.v"
-    "$HF_RISCV_DIR/HardFloat_specialize.v"
     # Packages first
     "$RTL_DIR/cpu/cpu_pkg.sv"
     # CPU core (alphabetical-ish, cpu_core.sv last of this group)
@@ -51,7 +36,7 @@ SRC=(
     "$RTL_DIR/cpu/cpu_wb_stage.sv"
     "$RTL_DIR/cpu/cpu_core.sv"
     "$RTL_DIR/cpu/cpu_core_mem_top.sv"
-    # FPU wrapper uses Berkeley HardFloat sources above.
+    # Self-contained approval FPU wrapper.
     "$RTL_DIR/cpu/fpu_wrapper.sv"
     # rst_sync.sv not used by fpga_top
     # "$RTL_DIR/cpu/rst_sync.sv"

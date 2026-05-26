@@ -14,7 +14,6 @@ approval/debug capture.
 | --- | --- |
 | `RTL/cpu/` | CPU, UART bridge, top-level FPGA RTL, and branch/FPU support RTL |
 | `RTL/TB/` | SystemVerilog testbenches |
-| `RTL/berkeley-hardfloat/` | HardFloat sources used by the floating-point wrapper |
 | `Nexys4/const/` | Nexys4 XDC constraints |
 | `Nexys4/IMP/` | Vivado Tcl flow and simulation scripts |
 | `scripts/` | Host-side build, programming, UART, compare, and ILA export scripts |

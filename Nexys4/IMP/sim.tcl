@@ -3,8 +3,6 @@
 
 set script_dir [file dirname [info script]]
 set rtl_dir   [file normalize "$script_dir/../../RTL"]
-set hf_dir    [file normalize "$rtl_dir/berkeley-hardfloat/extract"]
-set hf_riscv_dir [file join $hf_dir RISCV]
 set proj_name "sim_fpga_top"
 
 # Clean up previous
@@ -15,19 +13,6 @@ create_project $proj_name $proj_name -part xc7a100tcsg324-1 -force
 
 # Add source files
 set sv_files [list]
-# Berkeley HardFloat
-lappend sv_files $hf_dir/HardFloat_primitives.v
-lappend sv_files $hf_dir/HardFloat_rawFN.v
-lappend sv_files $hf_dir/isSigNaNRecFN.v
-lappend sv_files $hf_dir/fNToRecFN.v
-lappend sv_files $hf_dir/recFNToFN.v
-lappend sv_files $hf_dir/recFNToIN.v
-lappend sv_files $hf_dir/iNToRecFN.v
-lappend sv_files $hf_dir/addRecFN.v
-lappend sv_files $hf_dir/mulRecFN.v
-lappend sv_files $hf_dir/mulAddRecFN.v
-lappend sv_files $hf_dir/divSqrtRecFN_small.v
-lappend sv_files $hf_riscv_dir/HardFloat_specialize.v
 # CPU core files
 lappend sv_files {*}[glob -nocomplain $rtl_dir/cpu/cpu_pkg.sv]
 lappend sv_files {*}[glob -nocomplain $rtl_dir/cpu/cpu_alu.sv]
@@ -81,7 +66,7 @@ set_property top tb_fpga_top [get_filesets sim_1]
 set_property top_lib xil_defaultlib [get_filesets sim_1]
 
 # Set include dirs
-set_property include_dirs [list $rtl_dir/cpu $rtl_dir/cpu/bp $hf_riscv_dir $hf_dir] [get_filesets sim_1]
+set_property include_dirs [list $rtl_dir/cpu $rtl_dir/cpu/bp] [get_filesets sim_1]
 
 puts "\[SIM\] Launching simulation..."
 launch_simulation

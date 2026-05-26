@@ -12,7 +12,7 @@ module tb_fpga_top_g5_test1;
     localparam int unsigned TX_BIT_CYCLES = CLK_HZ / BAUD;
     localparam int unsigned IDLE_GAP_CYCLES = 60000;
     localparam int unsigned BYTE_WAIT_CYCLES = 120_000_000;
-    localparam int unsigned BIN_LEN = 156;
+    localparam int unsigned BIN_LEN = 160;
 
     logic        clk;
     logic        rst_n;

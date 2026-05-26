@@ -109,7 +109,6 @@ def resolve_project_path(path: Path, root: Path) -> Path:
 def source_files(root: Path) -> list[Path]:
     roots = [
         root / "RTL" / "cpu",
-        root / "RTL" / "berkeley-hardfloat" / "extract",
     ]
     files: list[Path] = []
     for source_root in roots:

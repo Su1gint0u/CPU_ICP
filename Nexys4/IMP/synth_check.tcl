@@ -3,30 +3,13 @@
 set project_dir [file dirname [info script]]
 set const_dir   [file normalize "$project_dir/../const"]
 set rtl_dir     [file normalize "$project_dir/../../RTL/cpu"]
-set hf_dir      [file normalize "$project_dir/../../RTL/berkeley-hardfloat/extract"]
-set hf_riscv_dir [file join $hf_dir RISCV]
 set part_name   "xc7a100tcsg324-1"
 set top_module  "fpga_top"
 
 set_param general.maxThreads 2
 file mkdir $project_dir/imp
 
-set hardfloat_files [list]
-lappend hardfloat_files $hf_dir/HardFloat_primitives.v
-lappend hardfloat_files $hf_dir/HardFloat_rawFN.v
-lappend hardfloat_files $hf_dir/isSigNaNRecFN.v
-lappend hardfloat_files $hf_dir/fNToRecFN.v
-lappend hardfloat_files $hf_dir/recFNToFN.v
-lappend hardfloat_files $hf_dir/recFNToIN.v
-lappend hardfloat_files $hf_dir/iNToRecFN.v
-lappend hardfloat_files $hf_dir/addRecFN.v
-lappend hardfloat_files $hf_dir/mulRecFN.v
-lappend hardfloat_files $hf_dir/mulAddRecFN.v
-lappend hardfloat_files $hf_dir/divSqrtRecFN_small.v
-lappend hardfloat_files $hf_riscv_dir/HardFloat_specialize.v
-
-read_verilog -sv -I $hf_riscv_dir -I $hf_dir $hardfloat_files
-read_verilog -sv -I $hf_riscv_dir -I $hf_dir $rtl_dir/cpu_pkg.sv
+read_verilog -sv -I $rtl_dir -I $rtl_dir/bp $rtl_dir/cpu_pkg.sv
 set src_files [list]
 lappend src_files $rtl_dir/cpu_alu.sv
 lappend src_files $rtl_dir/cpu_bru.sv
@@ -65,7 +48,7 @@ lappend src_files $rtl_dir/bp/bp_predictor_simple.sv
 
 foreach f $src_files {
     if {[file exists $f]} {
-        read_verilog -sv -I $hf_riscv_dir -I $hf_dir $f
+        read_verilog -sv -I $rtl_dir -I $rtl_dir/bp $f
     } else {
         puts "SYNTH_CHECK WARNING: file not found: $f"
     }

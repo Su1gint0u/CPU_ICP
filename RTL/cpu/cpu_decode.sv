@@ -117,33 +117,17 @@ module cpu_decode (
                     uses_rs2 = 1'b1;
             end
             7'b1010011: begin
-                if      (funct7 == 7'h78 && rs2 == 5'b0 && funct3 == 3'b0)
-                    uses_rs1 = 1'b1;
-                else if (funct7 == 7'h70 && rs2 == 5'b0 && funct3 == 3'b0)
-                    uses_frs1 = 1'b1;
-                else if (funct7 == 7'h68 && (rs2 == 5'b0 || rs2 == 5'b1))
+                if (funct7 == 7'h68 && (rs2 == 5'b0 || rs2 == 5'b1))
                     uses_rs1 = 1'b1;
                 else if (funct7 == 7'h60 && (rs2 == 5'b0 || rs2 == 5'b1))
-                    uses_frs1 = 1'b1;
-                else if (funct7 == 7'h54 && rs2 == 5'b0 &&
-                    (funct3 == 3'b0 || funct3 == 3'b001 || funct3 == 3'b010)) begin
-                    uses_frs1 = 1'b1; uses_frs2 = 1'b1;
-                end else if (funct7 == 7'h71 && rs2 == 5'b0 && funct3 == 3'b001)
                     uses_frs1 = 1'b1;
                 else if (funct7 == 7'h00 || funct7 == 7'h04 || funct7 == 7'h08 || funct7 == 7'h0C) begin
                     uses_frs1 = 1'b1; uses_frs2 = 1'b1;
                 end else if (funct7 == 7'h2C && rs2 == 5'b0)
                     uses_frs1 = 1'b1;
-                else if (funct7 == 7'h10 && (rs2 == 5'b0 || rs2 == 5'b1 || rs2 == 5'h2)) begin
-                    uses_frs1 = 1'b1; uses_frs2 = 1'b1;
-                end else if (funct7 == 7'h14 && (funct3 == 3'b000 || funct3 == 3'b001)) begin
-                    uses_frs1 = 1'b1; uses_frs2 = 1'b1;
-                end
             end
             7'h43, 7'h47, 7'h4b, 7'h4f: begin
-                if (fp_r4_legal()) begin
-                    uses_frs1 = 1'b1; uses_frs2 = 1'b1; uses_frs3 = 1'b1;
-                end
+                uses_frs1 = 1'b0; uses_frs2 = 1'b0; uses_frs3 = 1'b0;
             end
             default: ;
         endcase
@@ -237,34 +221,21 @@ module cpu_decode (
         else if (opcode == 7'b0100111)    fp_f0_legal = (f3 == 3'b010);
         else if (opcode == 7'b1010011) begin
             if ((f3 == 3'b101) || (f3 == 3'b110)) fp_f0_legal = 1'b0;
-            else if (f7 == 7'h78 && r2 == 5'b0 && f3 == 3'b0)      fp_f0_legal = 1'b1;
-            else if (f7 == 7'h70 && r2 == 5'b0 && f3 == 3'b0)      fp_f0_legal = 1'b1;
             else if (f7 == 7'h68 && (r2 == 5'b0||r2 == 5'b1))      fp_f0_legal = 1'b1;
             else if (f7 == 7'h60 && (r2 == 5'b0||r2 == 5'b1))      fp_f0_legal = 1'b1;
-            else if (f7 == 7'h54 && r2 == 5'b0 && (f3 == 3'b0||f3 == 3'b001||f3 == 3'b010)) fp_f0_legal = 1'b1;
-            else if (f7 == 7'h71 && r2 == 5'b0 && f3 == 3'b001)    fp_f0_legal = 1'b1;
             else if (f7 == 7'h00||f7 == 7'h04||f7 == 7'h08||f7 == 7'h0C) fp_f0_legal = 1'b1;
             else if (f7 == 7'h2C && r2 == 5'b0)                     fp_f0_legal = 1'b1;
-            else if (f7 == 7'h10 && (r2 == 5'b0||r2 == 5'b1||r2 == 5'h2)) fp_f0_legal = 1'b1;
-            else if (f7 == 7'h14 && (f3 == 3'b000||f3 == 3'b001))  fp_f0_legal = 1'b1;
         end
     endfunction
 
     function automatic logic fp_f0_writes_frd();
         logic [6:0] f7 = funct7;
         fp_f0_writes_frd = fp_f0_legal()
-            && !(f7 == 7'h70   // FMV.X.W
-              || f7 == 7'h60   // FCVT.W[U].S
-              || f7 == 7'h54   // FEQ/FLT/FLE
-              || f7 == 7'h71); // FCLASS
+            && !(f7 == 7'h60); // FCVT.W[U].S writes an integer register.
     endfunction
 
     function automatic logic fp_r4_legal();
         fp_r4_legal = 1'b0;
-        if ((funct3 == 3'b101) || (funct3 == 3'b110)) ;
-        else if (inst[26:25] != 2'b00) ;
-        else if (opcode == 7'h43 || opcode == 7'h47 || opcode == 7'h4b || opcode == 7'h4f)
-            fp_r4_legal = 1'b1;
     endfunction
 
     function automatic logic amo_legal();
